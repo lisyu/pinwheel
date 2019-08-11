@@ -1,3 +1,7 @@
+# FILES TO IGNORE FOR AUTH/PRIVACY
+pinwheelbot.pem
+auth.json
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]

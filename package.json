@@ -1,0 +1,11 @@
+{
+"name": "pinwheel",
+"version": "1.0.2",
+"description": "simple pin manager",
+"main": "pinwheel.py",
+"author": "kuyimal",
+"dependencies": {
+    "discord.py": "1.2.3",
+    "emoji":"0.5.3"
+    }
+}
