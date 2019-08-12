@@ -2,21 +2,23 @@ import discord
 import pickle
 import datetime as dt
 import json
+import asyncio
 from emoji import UNICODE_EMOJI
 
-# TODO: (KYU)
+# TODO(KYU): 
 # - add console coloring ?
-# - dev help panel?
-# - add custom emoji support
 
 NAME = "Pinwheel Discord Bot"
 SESSION_FILE = "server-configs.p"
+AUTO_SAVE_SESSION_FILE = "server-configs-auto.p"
+
+SAVE_DELAY = 30 # in minutes
 
 FLAG = "p?"
 
 GREET_MSG = "> **Howdy! I'm Pinwheel!**"
 HELP_MSG = "> Available commands: `help` `status` `howdy` `setcount` `setemoji`"
-DEV_MSG = "> Available dev commands: `savestate` `reset` `togglev` `lastlogin`"
+DEV_MSG = "> Available dev commands: `savestate` `reset` `togglev` `lastlogin` `lastsave`"
 STATUS_MSG = "> Right now I'm looking for posts with at least `{}` {} reacts."
 
 PIN_EMOJI_DEFAULT = "📌"
@@ -74,22 +76,26 @@ class PinClient(discord.Client):
 
     def __init__(self):
         ## SERVER SETTINGS RETRIEVAL (CREATE NEW IF NOT FOUND)
-        self.session_map = self.load_session()
+        ## (DEFAULTS TO AUTOSAVE FILE)
+        self.session_map = self.load_session(AUTO_SAVE_SESSION_FILE)
 
         ## For debug purposes
         self.last_login = Timestamp()
+        self.last_save = "NOT SAVED"
+
         log("Session loaded.")
         
         super().__init__(activity=discord.Game(name="{}help".format(FLAG)))
         
-    def save_session(self):
+    def save_session(self, filepath):
         """Save session map to file"""
-        return pickle.dump(self.session_map, open(SESSION_FILE, "wb"))
+        pickle.dump(self.session_map, open(filepath, "wb"))
+        self.last_save = Timestamp()
     
-    def load_session(self):
+    def load_session(self, filepath):
         """Load session map from file"""
         try:
-            return pickle.load(open(SESSION_FILE, "rb"))
+            return pickle.load(open(filepath, "rb"))
         except EOFError:
             log("Session created.")
             return {}
@@ -106,6 +112,12 @@ class PinClient(discord.Client):
         """assign fresh session to the given server"""
         self.session_map[server_id] = Pinwheel()
 
+    async def auto_save(self):
+        """Auto-saves every predetermined delay"""
+        while True:
+            await asyncio.sleep(60 * SAVE_DELAY)
+            self.save_session(AUTO_SAVE_SESSION_FILE)
+            log("Session saved to {}.".format(AUTO_SAVE_SESSION_FILE))
 
     ## COMMAND EXECUTION HELPERS
 
@@ -153,6 +165,7 @@ class PinClient(discord.Client):
     
     async def on_ready(self):
         log('Successfully logged in as {0.user}.'.format(self))
+        self.loop.create_task(self.auto_save())
         
     async def on_message(self, message):
         if message.author == self.user:
@@ -191,8 +204,7 @@ class PinClient(discord.Client):
         # SAVE SESSIONMAP
         elif message.content == "{}:savestate".format(FLAG):
             try:
-                self.save_session()
-                log("Session saved.")
+                self.save_session(SESSION_FILE)
                 await message.channel.send("Session saved successfully.")
             except IOError:
                 await message.channel.send("Couldn't save session!")
@@ -213,6 +225,9 @@ class PinClient(discord.Client):
         elif message.content == "{}:lastlogin".format(FLAG):
             await message.channel.send("Last login was at time `{}`.".format(self.last_login))
             
+        elif message.content == "{}:lastsave".format(FLAG):
+            await message.channel.send("Last save was at time `{}`.".format(self.last_save))
+
     async def on_raw_reaction_add(self, payload):
         channel = await self.fetch_channel(payload.channel_id)
         message = await channel.fetch_message(payload.message_id)
