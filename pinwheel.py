@@ -5,7 +5,6 @@ import json
 from emoji import UNICODE_EMOJI
 
 # TODO: (KYU)
-# - grab auth and version from package.json
 # - add console coloring ?
 # - dev help panel?
 # - add custom emoji support
@@ -17,6 +16,7 @@ FLAG = "p?"
 
 GREET_MSG = "> **Howdy! I'm Pinwheel!**"
 HELP_MSG = "> Available commands: `help` `status` `howdy` `setcount` `setemoji`"
+DEV_MSG = "> Available dev commands: `savestate` `reset` `togglev` `lastlogin`"
 STATUS_MSG = "> Right now I'm looking for posts with at least `{}` {} reacts."
 
 PIN_EMOJI_DEFAULT = "📌"
@@ -165,6 +165,11 @@ class PinClient(discord.Client):
             await message.channel.send(self.get_config(message.guild.id).get_greeting())
             await message.channel.send(self.get_config(message.guild.id).get_status())
 
+        # GET DEV HELP MESSAGE
+        elif message.content == "{}:help".format(FLAG):
+            await message.channel.send(self.get_config(message.guild.id).get_greeting())
+            await message.channel.send(DEV_MSG)
+
         # GET GREETING
         elif message.content == "{}howdy".format(FLAG):
             await message.channel.send("Howdy!")
@@ -208,11 +213,6 @@ class PinClient(discord.Client):
         # GET LAST LOGIN
         elif message.content == "{}:lastlogin".format(FLAG):
             await message.channel.send("Last login was at time `{}`.".format(self.last_login))
-
-    # (KYU): may be unnecessary. discord.py doesn't seen to call this event when on_raw_reaction_add is implemented
-    async def on_reaction_add(self, reaction, user):
-        if self.get_config(reaction.message.guild.id).can_pin(reaction) and reaction.message.pinned == False:
-            await self.try_pin(reaction.message)
             
     async def on_raw_reaction_add(self, payload):
         channel = await self.fetch_channel(payload.channel_id)

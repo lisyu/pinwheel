@@ -16,6 +16,18 @@ Install the required dependencies with `pip3` using this command:
 pip3 install -r requirements.txt
 ```
 
+### Discord Authentication
+
+Create a file `auth.json` that contains the following text:
+
+```
+{
+"token": "<AUTH TOKEN>"
+}
+```
+
+Replace `<AUTH TOKEN>` with the authentication token from your Discord bot's portal. 
+
 ## Running the Bot
 
 Run the bot using the following command:
