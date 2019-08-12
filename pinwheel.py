@@ -56,7 +56,7 @@ class Pinwheel():
         return STATUS_MSG.format(self.pin_count, self.pin_emoji)
 
     def can_pin(self, reaction):
-        return reaction.emoji == self.pin_emoji and reaction.count == self.pin_count
+        return str(reaction.emoji) == self.pin_emoji and reaction.count == self.pin_count
 
     def set_count(self, num):
         # print("Set minimum required reaction count to {}".format(num))
@@ -66,9 +66,8 @@ class Pinwheel():
         # print("Set required reaction emoji to {}".format(s))
         self.pin_emoji = s
         
-    def is_valid_emoji(self, s):
-        # TODO: add custom emoji validity checking
-        return s in UNICODE_EMOJI
+    def is_valid_emoji(self, s, guild):
+        return s in UNICODE_EMOJI or s in [str(emoji) for emoji in guild.emojis]
 
         
 class PinClient(discord.Client):
@@ -129,7 +128,7 @@ class PinClient(discord.Client):
     async def try_set_emoji(self, message):
         msg = message.content.split(" ")
         try:
-            if self.get_config(message.guild.id).is_valid_emoji(msg[1]):
+            if self.get_config(message.guild.id).is_valid_emoji(msg[1], message.guild):
                 self.get_config(message.guild.id).set_emoji(msg[1])
                 await message.channel.send("Set reaction emoji to {}.".format(msg[1]))
             else:
