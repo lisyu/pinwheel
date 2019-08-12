@@ -122,7 +122,7 @@ class PinClient(discord.Client):
             self.get_config(message.guild.id).set_count(int(msg[1]))
             await message.channel.send("Set reaction minimum to `{}`.".format(msg[1]))
         except IndexError:
-            await message.channel.send("**Usage**: p!setcount `<new minimum count>`")
+            await message.channel.send("**Usage**: {}setcount `<new minimum count>`".format(FLAG))
         except ValueError:
             await message.channel.send("Please enter a valid number!")
     
@@ -135,7 +135,7 @@ class PinClient(discord.Client):
             else:
                 await message.channel.send("Please enter a valid emoji!")
         except IndexError:
-            await message.channel.send("**Usage**: p!setemoji `<new reaction emoji>`")
+            await message.channel.send("**Usage**: {}setemoji `<new reaction emoji>`".format(FLAG))
 
     async def try_pin(self, message):
         log("Pinning post #{} in {}...".format(message.id, message.guild.name))
