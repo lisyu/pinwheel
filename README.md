@@ -21,7 +21,7 @@ pip3 install -r requirements.txt
 Copy the file `auth.json.example` to `auth.json`. You can do this with the following command:
 
 ```
-mv auth.json.example auth.json
+cp auth.json.example auth.json
 ```
 
 Replace the line `<AUTH TOKEN>` in `auth.json` with the authentication token from your Discord bot's portal. Check out `discord.py`'s guide on creating a bot account [here](https://discordpy.readthedocs.io/en/latest/discord.html#creating-a-bot-account) for a quick tutorial on setting up your Discord bot's account.
