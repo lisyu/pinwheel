@@ -12,7 +12,7 @@ NAME = "Pinwheel Discord Bot"
 SESSION_FILE = "server-configs.p"
 AUTO_SAVE_SESSION_FILE = "server-configs-auto.p"
 
-SAVE_DELAY = 30 # in minutes
+SAVE_DELAY = 60 # in minutes
 
 FLAG = "p?"
 
@@ -166,6 +166,9 @@ class PinClient(discord.Client):
     async def on_ready(self):
         log('Successfully logged in as {0.user}.'.format(self))
         self.loop.create_task(self.auto_save())
+
+    async def on_guild_join(self, guild):
+        log('Joined guild {0.name} ({0.id}).'.format(guild))
         
     async def on_message(self, message):
         if message.author == self.user:
