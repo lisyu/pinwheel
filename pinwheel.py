@@ -124,7 +124,8 @@ class PinClient(discord.Client):
     ## COMMAND EXECUTION HELPERS
 
     async def try_admin_command(self, message, command):
-        if message.author.permissions_in(message.channel).administrator:
+        """misnomer: checks if the message author is a server manager, and then runs command"""
+        if message.author.permissions_in(message.channel).manage_guild:
             await command(message)
         else:
             await message.channel.send("Only admins can perform this command!")

@@ -2,6 +2,9 @@
 pinwheelbot.pem
 auth.json
 
+# IGNORE PICKLED FILES (I.E., SESSION SAVES)
+*.p
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
