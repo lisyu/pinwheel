@@ -4,6 +4,8 @@ import datetime as dt
 import json
 import asyncio
 from emoji import UNICODE_EMOJI
+import logging
+
 
 # TODO(KYU): 
 # - add console coloring ?
@@ -244,6 +246,8 @@ class PinClient(discord.Client):
 def main():              
     token = json.load(open("auth.json"))["token"]
     module_info = json.load(open("package.json"))
+
+    logging.basicConfig(level=logging.WARNING)
 
     print(NAME + " ({})".format(module_info["version"]))
     client = PinClient()
