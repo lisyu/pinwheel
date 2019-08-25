@@ -180,7 +180,11 @@ class PinClient(discord.Client):
         log("Pinning post #{} in {}...".format(message.id, message.guild.name))
         if self.get_config(message.guild.id).aggressive:
             await message.channel.send("`You. Come closer.`")
-        await message.pin()
+
+        try:
+            await message.pin()
+        except HTTPException as e:
+            await message.channel.send("> Couldn't pin message!")
         
     ## EVENT LISTENERS
 
