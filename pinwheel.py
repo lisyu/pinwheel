@@ -8,7 +8,7 @@ import logging
 
 
 # TODO(KYU): 
-# - add console coloring ?
+# - add console coloring for logging ? 
 
 NAME = "Pinwheel Discord Bot"
 SESSION_FILE = "server-configs.p"
@@ -168,7 +168,8 @@ class PinClient(discord.Client):
         try:
             if msg[1] == "none":
                 self.get_config(message.guild.id).set_blacklist_emoji(None)
-            if self.get_config(message.guild.id).is_valid_emoji(msg[1], message.guild):
+                await message.channel.send("I'll stop ignoring messages for now.")
+            elif self.get_config(message.guild.id).is_valid_emoji(msg[1], message.guild):
                 self.get_config(message.guild.id).set_blacklist_emoji(msg[1])
                 await message.channel.send("From now on, I'll ignore messages with {}.".format(msg[1]))
             else:
@@ -183,8 +184,9 @@ class PinClient(discord.Client):
 
         try:
             await message.pin()
-        except HTTPException as e:
+        except discord.HTTPException as e:
             await message.channel.send("> Couldn't pin message!")
+            log("Encountered HTTPException: {}".format(e))
         
     ## EVENT LISTENERS
 
