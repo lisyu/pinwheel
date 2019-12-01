@@ -5,7 +5,7 @@
 "main": "pinwheel.py",
 "author": "kuyimal",
 "dependencies": {
-    "discord.py": "1.2.3",
+    "discord.py": "1.2.5",
     "emoji":"0.5.3"
     }
 }

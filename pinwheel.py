@@ -127,7 +127,7 @@ class PinClient(discord.Client):
         self.session_map[server_id] = Pinwheel()
 
     async def auto_save(self):
-        """Auto-saves every predetermined delay"""
+        """auto-saves every predetermined delay"""
         while True:
             await asyncio.sleep(60 * SAVE_DELAY)
             self.save_session(AUTO_SAVE_SESSION_FILE)
