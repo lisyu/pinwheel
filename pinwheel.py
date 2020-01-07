@@ -24,6 +24,15 @@ DEV_MSG = "> Available dev commands: `savestate` `reset` `togglev` `lastlogin` `
 STATUS_MSG = "> Right now I'm looking for posts with at least `{}` {} reacts."
 BLACKLIST_MSG = "> I'm also ignoring all messages with {} reacts."
 
+CUBE_STR = '''
+  +----+
+ /    /|
++----+ |
+|    | +
+|    |/
++----+
+'''
+
 PIN_EMOJI_DEFAULT = "📌"
 MIN_COUNT_DEFAULT = 2
 
@@ -269,6 +278,11 @@ class PinClient(discord.Client):
             
         elif message.content == "{}:lastsave".format(FLAG):
             await message.channel.send("Last save was at time `{}`.".format(self.last_save))
+
+        ## SILLY COMMANDS ------------------------------------------------------            
+        # PRINT CUBES
+        elif message.content.startswith("{}cubes".format(FLAG)):
+            await message.channel.send("```{}```".format(CUBE_STR))
 
     async def on_raw_reaction_add(self, payload):
         channel = await self.fetch_channel(payload.channel_id)
