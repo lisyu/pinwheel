@@ -14,7 +14,7 @@ NAME = "Pinwheel Discord Bot"
 SESSION_FILE = "server-configs.p"
 AUTO_SAVE_SESSION_FILE = "server-configs-auto.p"
 
-SAVE_DELAY = 60 # in minutes
+SAVE_DELAY = 60 * 24 # in minutes
 
 FLAG = "p?"
 
