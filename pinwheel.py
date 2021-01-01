@@ -34,7 +34,7 @@ CUBE_STR = '''
 '''
 
 PIN_EMOJI_DEFAULT = "📌"
-MIN_COUNT_DEFAULT = 2
+MIN_COUNT_DEFAULT = 3
 
 def log(message):
     print("[{}] {}".format(Timestamp(), message))
